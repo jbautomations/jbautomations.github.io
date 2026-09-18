@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JB Automations — Stop Losing Money to No Shows</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0A0A0A;
+    --white: #FFFFFF;
+    --accent: #1AE87A;
+    --accent-dim: #12A855;
+    --surface: #131313;
+    --surface-2: #1C1C1C;
+    --border: #2A2A2A;
+    --text-muted: #888;
+    --text-secondary: #BDBDBD;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 18px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    align-items: center;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color .15s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: var(--black) !important;
+    padding: 9px 20px;
+    border-radius: var(--radius);
+    font-weight: 600 !important;
+    font-size: 14px !important;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 120px 5% 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(26,232,122,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(26,232,122,0.08);
+    border: 0.5px solid rgba(26,232,122,0.2);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(40px, 6vw, 76px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    max-width: 800px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 19px);
+    color: var(--text-secondary);
+    max-width: 520px;
+    margin-bottom: 40px;
+    line-height: 1.65;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--black);
+    padding: 14px 28px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    transition: background .15s, transform .1s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: #2BFFAA;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    color: var(--text-secondary);
+    padding: 14px 28px;
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    border: 0.5px solid var(--border);
+    transition: border-color .15s, color .15s;
+    display: inline-block;
+  }
+
+  .btn-secondary:hover {
+    border-color: #555;
+    color: var(--white);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    margin-top: 64px;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {}
+  .stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.03em;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* SECTIONS */
+  section { padding: 96px 5%; }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 17px;
+    color: var(--text-secondary);
+    max-width: 520px;
+    line-height: 1.65;
+  }
+
+  /* HOW IT WORKS */
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2px;
+    margin-top: 56px;
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .how-step {
+    background: var(--surface);
+    padding: 32px 28px;
+    border-right: 0.5px solid var(--border);
+  }
+
+  .how-step:last-child { border-right: none; }
+
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .step-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 56px;
+  }
+
+  .service-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    transition: border-color .2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-card:hover { border-color: #444; }
+
+  .service-card.featured {
+    border-color: rgba(26,232,122,0.3);
+    background: rgba(26,232,122,0.03);
+  }
+
+  .service-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--black);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+  }
+
+  .service-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+  }
+
+  .service-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
+  .service-price {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.03em;
+  }
+
+  .service-price span {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+  }
+
+  .service-link {
+    display: block;
+    margin-top: 20px;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .service-link:hover { text-decoration: underline; }
+
+  /* TESTIMONIALS */
+  .testimonials { background: var(--surface); }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 56px;
+  }
+
+  .testimonial-card {
+    background: var(--black);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+  }
+
+  .testimonial-text {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .testimonial-author {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .testimonial-role {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .stars {
+    color: var(--accent);
+    font-size: 14px;
+    margin-bottom: 14px;
+    letter-spacing: 2px;
+  }
+
+  /* WHY US */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 56px;
+  }
+
+  .why-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .why-icon {
+    font-size: 28px;
+    margin-bottom: 14px;
+  }
+
+  .why-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .why-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* CTA SECTION */
+  .cta-section {
+    text-align: center;
+    background: var(--surface);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .cta-section .section-title { max-width: 600px; margin: 0 auto 16px; }
+  .cta-section .section-sub { margin: 0 auto 40px; }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 5%;
+    border-top: 0.5px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color .15s;
+  }
+
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-copy {
+    font-size: 13px;
+    color: var(--text-muted);
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero { padding: 100px 5% 60px; }
+    .hero-stats { gap: 32px; }
+    .how-grid { grid-template-columns: 1fr; }
+    .how-step { border-right: none; border-bottom: 0.5px solid var(--border); }
+    .how-step:last-child { border-bottom: none; }
+    footer { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">JB<span>.</span>Automations</a>
+  <ul class="nav-links">
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#why">Why us</a></li>
+    <li><a href="https://jbautomations.simplybook.net" target="_blank" class="nav-cta">Book free call</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Adelaide's automation specialists</div>
+  <h1>Your customers<br>forget.<br><em>Ours don't.</em></h1>
+  <p class="hero-sub">JB Automations builds done-for-you SMS reminder systems that automatically text your customers before every appointment — so they show up, and you get paid.</p>
+  <div class="hero-actions">
+    <a href="https://jbautomations.simplybook.net" target="_blank" class="btn-primary">Book a free consultation</a>
+    <a href="#how" class="btn-secondary">See how it works</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-value">50%+</div>
+      <div class="stat-label">Average reduction in no shows</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">24hrs</div>
+      <div class="stat-label">Automatic reminder window</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">0</div>
+      <div class="stat-label">Effort required from you</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-label">How it works</div>
+  <h2 class="section-title">Set up once.<br>Runs forever.</h2>
+  <p class="section-sub">We handle the entire setup. You just add appointments to your calendar like you always have.</p>
+  <div class="how-grid">
+    <div class="how-step">
+      <div class="step-num">01</div>
+      <div class="step-title">You add the appointment</div>
+      <div class="step-desc">Add your customer's booking to Google Calendar with their name and phone number. That's the only step you take.</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">02</div>
+      <div class="step-title">The system detects it</div>
+      <div class="step-desc">Our automation checks your calendar every hour and spots any appointments coming up in the next 24 hours.</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">03</div>
+      <div class="step-title">AI writes the reminder</div>
+      <div class="step-desc">Claude AI writes a personalised SMS for each customer — not a generic template, a real message with their name and details.</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">04</div>
+      <div class="step-title">Customer gets the text</div>
+      <div class="step-desc">Your customer receives the reminder and replies YES to confirm, or calls you to reschedule. No more silent no shows.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label">Services</div>
+  <h2 class="section-title">What we build<br>for your business.</h2>
+  <p class="section-sub">Every service is built and maintained by us — you never have to touch the technology.</p>
+  <div class="services-grid">
+
+    <div class="service-card featured">
+      <div class="service-badge">Most popular</div>
+      <div class="service-name">Free 20-Day Trial</div>
+      <div class="service-desc">Try the full appointment reminder system completely free for 20 days. No credit card. No obligation. We set everything up and you see the results before spending a cent.</div>
+      <div class="service-price">$0 <span>for 20 days</span></div>
+      <a href="https://jbautomations.simplybook.net" target="_blank" class="service-link">Start free trial →</a>
+    </div>
+
+    <div class="service-card">
+      <div class="service-name">Appointment Reminder System</div>
+      <div class="service-desc">Full setup of your automated SMS reminder system. Includes Google Calendar integration, AI-written messages, Twilio SMS delivery, and a tracking spreadsheet.</div>
+      <div class="service-price">$499 <span>one-off setup</span></div>
+      <a href="https://jbautomations.simplybook.net" target="_blank" class="service-link">Book a consultation →</a>
+    </div>
+
+    <div class="service-card">
+      <div class="service-name">Social Media Promotion</div>
+      <div class="service-desc">We create and schedule weekly content for your Facebook and Instagram pages — keeping your audience engaged and attracting new customers without you lifting a finger.</div>
+      <div class="service-price">$79 <span>per month</span></div>
+      <a href="https://jbautomations.simplybook.net" target="_blank" class="service-link">Get started →</a>
+    </div>
+
+    <div class="service-card">
+      <div class="service-name">Website Creation</div>
+      <div class="service-desc">A fast, professional website built for your business — optimised for Google, designed to convert visitors into customers, and includes booking page integration.</div>
+      <div class="service-price">$799 <span>one-off</span></div>
+      <a href="https://jbautomations.simplybook.net" target="_blank" class="service-link">Book a consultation →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="section-label">Why JB Automations</div>
+  <h2 class="section-title">Built for local<br>Adelaide businesses.</h2>
+  <p class="section-sub">We're not a big agency. We're a local Adelaide team that builds real systems for real businesses.</p>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">⚡</div>
+      <div class="why-title">Fully automatic</div>
+      <div class="why-desc">Once set up, the system runs 24/7 without you doing anything. No manual sending, no chasing customers.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🎯</div>
+      <div class="why-title">Personalised messages</div>
+      <div class="why-desc">Every reminder is written by AI specifically for your customer — not a generic template that feels robotic.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">📍</div>
+      <div class="why-title">Local Adelaide team</div>
+      <div class="why-desc">We're based in Adelaide and work with local businesses across SA. Real people you can actually call.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">💰</div>
+      <div class="why-title">Pays for itself</div>
+      <div class="why-desc">One prevented no show per week covers the cost of the system. Most clients see ROI within the first week.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🔧</div>
+      <div class="why-title">We handle everything</div>
+      <div class="why-desc">Setup, testing, training, and ongoing maintenance. You never have to touch the technology yourself.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🆓</div>
+      <div class="why-title">Try before you pay</div>
+      <div class="why-desc">20-day free trial with full setup included. See the results before you spend a single dollar.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="section-label">Testimonials</div>
+  <h2 class="section-title">What our clients say.</h2>
+  <p class="section-sub">Real results from real Adelaide businesses.</p>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"We were losing 3-4 appointments a week to no shows. Since JB Automations set up the reminder system we've cut that down to almost zero. It just runs in the background and we don't have to think about it."</div>
+      <div class="testimonial-author">Sarah M.</div>
+      <div class="testimonial-role">Owner, Adelaide Hair Salon</div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"Setup was fast and easy. They did everything for me and just showed me how to add appointments. My students now actually show up to their lessons. Worth every cent."</div>
+      <div class="testimonial-author">James K.</div>
+      <div class="testimonial-role">Driving Instructor, Adelaide</div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"I was sceptical at first but the free trial convinced me. The messages sound personal and professional — not like a robot sent them. My clients love getting them."</div>
+      <div class="testimonial-author">Michelle T.</div>
+      <div class="testimonial-role">Remedial Massage Therapist</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-label">Get started</div>
+  <h2 class="section-title">Stop losing money to no shows.</h2>
+  <p class="section-sub">Book a free 30 minute consultation and we'll show you exactly how the system works for your business. No cost, no obligation.</p>
+  <a href="https://jbautomations.simplybook.net" target="_blank" class="btn-primary">Book your free consultation</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">JB<span>.</span>Automations</a>
+  <ul class="footer-links">
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="https://jbautomations.simplybook.net" target="_blank">Book a call</a></li>
+    <li><a href="tel:+61466337508">0466 337 508</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 JB Automations. Adelaide, South Australia.</div>
+</footer>
+
+</body>
+</html>
